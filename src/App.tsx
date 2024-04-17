@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import "./App.css";
+import { TodoForm } from "./components/TodoForm/TodoForm";
 
 interface ITodo {
   date: string;
@@ -53,11 +54,11 @@ function App() {
   const resetInputValue = () => setValue("");
 
   // todos stuff
-  function addTodos(e: FormEvent<HTMLFormElement>) {
+  function addTodos(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault();
     setTodos([...todos, new Todo(value)]);
   }
-  function handleTodos(e: FormEvent<HTMLFormElement>) {
+  function handleTodos(e: FormEvent<HTMLButtonElement>) {
     addTodos(e);
     resetInputValue();
   }
@@ -119,13 +120,10 @@ function App() {
 
   return (
     <>
-      <form onSubmit={handleTodos}>
-        <fieldset>
-          <legend>
-            <h1>todos</h1>
-          </legend>
-
-          <section>
+      <TodoForm
+        header={<h1>todos</h1>}
+        action={
+          <>
             <input
               type="text"
               name="todo"
@@ -136,14 +134,16 @@ function App() {
             />
             <button
               type="submit"
+              onClick={handleTodos}
               aria-label="add todo"
               disabled={!value.length}
             >
               <span>+</span>
             </button>
-          </section>
-
-          <main>
+          </>
+        }
+        result={
+          <>
             <ul>
               {sortedTodos().map((t) => (
                 <li key={t.date} data-id={t.date}>
@@ -166,9 +166,10 @@ function App() {
                 </li>
               ))}
             </ul>
-          </main>
-
-          <footer>
+          </>
+        }
+        footer={
+          <>
             <section>
               <p>{todos.filter((t) => !t.completed).length} items left</p>
             </section>
@@ -195,9 +196,9 @@ function App() {
             >
               Clear completed
             </button>
-          </footer>
-        </fieldset>
-      </form>
+          </>
+        }
+      />
     </>
   );
 }
