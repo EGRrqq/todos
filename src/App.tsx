@@ -1,4 +1,10 @@
-import { FormEvent, MouseEvent, useCallback, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import "./App.css";
 
 interface ITodo {
@@ -6,6 +12,8 @@ interface ITodo {
   text: string;
   completed: boolean;
 }
+
+type TSortOptions = "all" | "completed" | "active";
 
 class Todo implements ITodo {
   text: string;
@@ -22,6 +30,7 @@ function App() {
 
   const [value, setValue] = useState<string>("");
   const [todos, setTodos] = useState<ITodo[]>(initTodos);
+  const [sortOption, setSortOption] = useState<TSortOptions>("all");
 
   // cache stuff
   function getCacheValue() {
@@ -56,7 +65,7 @@ function App() {
 
     return cachedTodos ? JSON.parse(cachedTodos) : [];
   }
-  function toggleTodoCompleted(e: MouseEvent<HTMLInputElement>) {
+  function toggleTodoCompleted(e: ChangeEvent<HTMLInputElement>) {
     const updatedTodos = todos.map((t) =>
       t.date === (e.target as HTMLInputElement).id
         ? { ...t, completed: !t.completed }
@@ -66,33 +75,76 @@ function App() {
     setTodos(updatedTodos);
   }
 
+  // sort todos
+  function updateSortOption(e: ChangeEvent<HTMLSelectElement>) {
+    setSortOption(e.target.value as TSortOptions);
+  }
+  function sortedTodos(): Todo[] {
+    let sortedTodos: Todo[];
+    switch (sortOption) {
+      case "active": {
+        sortedTodos = todos.filter((t) => !t.completed);
+        break;
+      }
+      case "completed": {
+        sortedTodos = todos.filter((t) => t.completed);
+        break;
+      }
+      default:
+        sortedTodos = todos;
+        break;
+    }
+
+    return sortedTodos;
+  }
+  function handleSort(e: ChangeEvent<HTMLSelectElement>) {
+    updateSortOption(e);
+    sortedTodos();
+  }
+
   return (
     <>
       <fieldset>
         <legend>todos</legend>
 
         <form onSubmit={handleTodos}>
-          <input
-            type="text"
-            onInput={saveInputValue}
-            value={value}
-            minLength={1}
-            required
-          />
-          <button type="submit" aria-label="add todo">
-            <span>+</span>
-          </button>
+          <div>
+            <input
+              type="text"
+              onInput={saveInputValue}
+              value={value}
+              minLength={1}
+              required
+            />
+            <button type="submit" aria-label="add todo">
+              <span>+</span>
+            </button>
+          </div>
+
+          <div>
+            <label htmlFor="sort-todos"></label>
+            <select
+              name="sort"
+              id="sort-todos"
+              onChange={handleSort}
+              value={sortOption}
+            >
+              <option value="all">All</option>
+              <option value="completed">Completed</option>
+              <option value="active">Active</option>
+            </select>
+          </div>
         </form>
 
         <ul>
-          {todos.map((t) => (
+          {sortedTodos().map((t) => (
             <li key={t.date}>
               <input
                 type="checkbox"
                 name="todo"
                 id={t.date}
                 defaultChecked={t.completed}
-                onClick={toggleTodoCompleted}
+                onChange={toggleTodoCompleted}
               />
               <label htmlFor={t.date}>{t.text}</label>
             </li>
