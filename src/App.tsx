@@ -1,6 +1,7 @@
 import {
   ChangeEvent,
   FormEvent,
+  MouseEvent,
   useCallback,
   useEffect,
   useState,
@@ -101,6 +102,12 @@ function App() {
     updateSortOption(e);
     sortedTodos();
   }
+  function clearCompletedTodos(e: MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+
+    const clearedTodos = todos.filter((t) => !t.completed);
+    setTodos(clearedTodos);
+  }
 
   return (
     <>
@@ -133,6 +140,12 @@ function App() {
               <option value="completed">Completed</option>
               <option value="active">Active</option>
             </select>
+          </div>
+
+          <div>
+            <button type="button" onClick={clearCompletedTodos} formNoValidate>
+              Clear completed
+            </button>
           </div>
 
           <ul>
