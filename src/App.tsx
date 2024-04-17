@@ -1,14 +1,16 @@
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, MouseEvent, useCallback, useEffect, useState } from "react";
 import "./App.css";
 
 interface ITodo {
-  date: number;
+  date: string;
   text: string;
+  completed: boolean;
 }
 
 class Todo implements ITodo {
   text: string;
-  date = Date.now();
+  date = Date.now().toString();
+  completed = false;
 
   constructor(value: string) {
     this.text = value;
@@ -54,6 +56,15 @@ function App() {
 
     return cachedTodos ? JSON.parse(cachedTodos) : [];
   }
+  function toggleTodoCompleted(e: MouseEvent<HTMLInputElement>) {
+    const updatedTodos = todos.map((t) =>
+      t.date === (e.target as HTMLInputElement).id
+        ? { ...t, completed: !t.completed }
+        : t
+    );
+
+    setTodos(updatedTodos);
+  }
 
   return (
     <>
@@ -75,7 +86,16 @@ function App() {
 
         <ul>
           {todos.map((t) => (
-            <li key={t.date}>{t.text}</li>
+            <li key={t.date}>
+              <input
+                type="checkbox"
+                name="todo"
+                id={t.date}
+                checked={t.completed}
+                onClick={toggleTodoCompleted}
+              />
+              <label htmlFor={t.date}>{t.text}</label>
+            </li>
           ))}
         </ul>
       </fieldset>
