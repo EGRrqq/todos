@@ -91,7 +91,7 @@ function App() {
                 type="checkbox"
                 name="todo"
                 id={t.date}
-                checked={t.completed}
+                defaultChecked={t.completed}
                 onClick={toggleTodoCompleted}
               />
               <label htmlFor={t.date}>{t.text}</label>
