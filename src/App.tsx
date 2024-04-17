@@ -187,7 +187,12 @@ function App() {
               </select>
             </section>
 
-            <button type="button" onClick={clearCompletedTodos} formNoValidate>
+            <button
+              type="button"
+              onClick={clearCompletedTodos}
+              formNoValidate
+              disabled={!todos.filter((t) => t.completed).length}
+            >
               Clear completed
             </button>
           </footer>
