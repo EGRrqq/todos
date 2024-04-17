@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import "./App.css";
 
 interface ITodo {
@@ -16,24 +16,43 @@ class Todo implements ITodo {
 }
 
 function App() {
+  const cacheValueId = "sweet-todos";
+
   const [value, setValue] = useState<string>("");
-  const [todos, setTodos] = useState<ITodo[]>([]);
+  const [todos, setTodos] = useState<ITodo[]>(initTodos);
 
-  function saveInputValue(e: FormEvent<HTMLInputElement>) {
+  // cache stuff
+  function getCacheValue() {
+    return localStorage.getItem(cacheValueId);
+  }
+  const setCacheValue = useCallback(
+    () => localStorage.setItem(cacheValueId, JSON.stringify(todos)),
+    [todos]
+  );
+
+  useEffect(() => {
+    setCacheValue();
+  }, [setCacheValue]);
+
+  // input value stuff
+  const saveInputValue = (e: FormEvent<HTMLInputElement>) =>
     setValue((e.target as HTMLInputElement).value);
-  }
-  function resetValue() {
-    setValue("");
-  }
 
+  const resetInputValue = () => setValue("");
+
+  // todos stuff
   function addTodos(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     setTodos([...todos, new Todo(value)]);
   }
   function handleTodos(e: FormEvent<HTMLFormElement>) {
     addTodos(e);
-    resetValue();
+    resetInputValue();
+  }
+  function initTodos(): Todo[] | [] {
+    const cachedTodos = getCacheValue();
+
+    return cachedTodos ? JSON.parse(cachedTodos) : [];
   }
 
   return (
