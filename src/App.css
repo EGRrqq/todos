@@ -5,3 +5,7 @@ li {
 button span {
   pointer-events: none;
 }
+
+form footer {
+  display: flex;
+}

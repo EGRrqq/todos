@@ -137,26 +137,6 @@ function App() {
             </button>
           </div>
 
-          <div>
-            <label htmlFor="sort-todos"></label>
-            <select
-              name="sort"
-              id="sort-todos"
-              onChange={handleSort}
-              value={sortOption}
-            >
-              <option value="all">All</option>
-              <option value="completed">Completed</option>
-              <option value="active">Active</option>
-            </select>
-          </div>
-
-          <div>
-            <button type="button" onClick={clearCompletedTodos} formNoValidate>
-              Clear completed
-            </button>
-          </div>
-
           <ul>
             {sortedTodos().map((t) => (
               <li key={t.date} data-id={t.date}>
@@ -179,6 +159,32 @@ function App() {
               </li>
             ))}
           </ul>
+
+          <footer>
+            <div>
+              <label htmlFor="sort-todos"></label>
+              <select
+                name="sort"
+                id="sort-todos"
+                onChange={handleSort}
+                value={sortOption}
+              >
+                <option value="all">All</option>
+                <option value="completed">Completed</option>
+                <option value="active">Active</option>
+              </select>
+            </div>
+
+            <div>
+              <button
+                type="button"
+                onClick={clearCompletedTodos}
+                formNoValidate
+              >
+                Clear completed
+              </button>
+            </div>
+          </footer>
         </fieldset>
       </form>
     </>
