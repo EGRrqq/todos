@@ -109,6 +109,14 @@ function App() {
     setTodos(clearedTodos);
   }
 
+  function removeTodo(e: MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+
+    const todoId = (e.target as HTMLButtonElement).parentElement?.dataset.id;
+    const newTodos = todos.filter((t) => t.date !== todoId);
+    setTodos(newTodos);
+  }
+
   return (
     <>
       <form onSubmit={handleTodos}>
@@ -118,6 +126,7 @@ function App() {
           <div>
             <input
               type="text"
+              name="todo"
               onInput={saveInputValue}
               value={value}
               minLength={1}
@@ -150,7 +159,7 @@ function App() {
 
           <ul>
             {sortedTodos().map((t) => (
-              <li key={t.date}>
+              <li key={t.date} data-id={t.date}>
                 <input
                   type="checkbox"
                   name="todo"
@@ -159,6 +168,14 @@ function App() {
                   onChange={toggleTodoCompleted}
                 />
                 <label htmlFor={t.date}>{t.text}</label>
+                <button
+                  type="submit"
+                  onClick={removeTodo}
+                  formNoValidate
+                  aria-label="remove todo"
+                >
+                  <span>-</span>
+                </button>
               </li>
             ))}
           </ul>
