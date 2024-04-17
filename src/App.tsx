@@ -134,7 +134,11 @@ function App() {
               minLength={1}
               required
             />
-            <button type="submit" aria-label="add todo">
+            <button
+              type="submit"
+              aria-label="add todo"
+              disabled={!value.length}
+            >
               <span>+</span>
             </button>
           </section>
