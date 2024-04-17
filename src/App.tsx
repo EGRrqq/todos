@@ -104,10 +104,10 @@ function App() {
 
   return (
     <>
-      <fieldset>
-        <legend>todos</legend>
+      <form onSubmit={handleTodos}>
+        <fieldset>
+          <legend>todos</legend>
 
-        <form onSubmit={handleTodos}>
           <div>
             <input
               type="text"
@@ -134,23 +134,23 @@ function App() {
               <option value="active">Active</option>
             </select>
           </div>
-        </form>
 
-        <ul>
-          {sortedTodos().map((t) => (
-            <li key={t.date}>
-              <input
-                type="checkbox"
-                name="todo"
-                id={t.date}
-                defaultChecked={t.completed}
-                onChange={toggleTodoCompleted}
-              />
-              <label htmlFor={t.date}>{t.text}</label>
-            </li>
-          ))}
-        </ul>
-      </fieldset>
+          <ul>
+            {sortedTodos().map((t) => (
+              <li key={t.date}>
+                <input
+                  type="checkbox"
+                  name="todo"
+                  id={t.date}
+                  defaultChecked={t.completed}
+                  onChange={toggleTodoCompleted}
+                />
+                <label htmlFor={t.date}>{t.text}</label>
+              </li>
+            ))}
+          </ul>
+        </fieldset>
+      </form>
     </>
   );
 }
