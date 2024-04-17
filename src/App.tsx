@@ -162,6 +162,10 @@ function App() {
 
           <footer>
             <div>
+              <p>{todos.filter((t) => !t.completed).length} items left</p>
+            </div>
+
+            <div>
               <label htmlFor="sort-todos"></label>
               <select
                 name="sort"
