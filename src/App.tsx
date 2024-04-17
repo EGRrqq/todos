@@ -121,9 +121,11 @@ function App() {
     <>
       <form onSubmit={handleTodos}>
         <fieldset>
-          <legend>todos</legend>
+          <legend>
+            <h1>todos</h1>
+          </legend>
 
-          <div>
+          <section>
             <input
               type="text"
               name="todo"
@@ -135,37 +137,39 @@ function App() {
             <button type="submit" aria-label="add todo">
               <span>+</span>
             </button>
-          </div>
+          </section>
 
-          <ul>
-            {sortedTodos().map((t) => (
-              <li key={t.date} data-id={t.date}>
-                <input
-                  type="checkbox"
-                  name="todo"
-                  id={t.date}
-                  defaultChecked={t.completed}
-                  onChange={toggleTodoCompleted}
-                />
-                <label htmlFor={t.date}>{t.text}</label>
-                <button
-                  type="submit"
-                  onClick={removeTodo}
-                  formNoValidate
-                  aria-label="remove todo"
-                >
-                  <span>-</span>
-                </button>
-              </li>
-            ))}
-          </ul>
+          <main>
+            <ul>
+              {sortedTodos().map((t) => (
+                <li key={t.date} data-id={t.date}>
+                  <input
+                    type="checkbox"
+                    name="todo"
+                    id={t.date}
+                    defaultChecked={t.completed}
+                    onChange={toggleTodoCompleted}
+                  />
+                  <label htmlFor={t.date}>{t.text}</label>
+                  <button
+                    type="submit"
+                    onClick={removeTodo}
+                    formNoValidate
+                    aria-label="remove todo"
+                  >
+                    <span>-</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </main>
 
           <footer>
-            <div>
+            <section>
               <p>{todos.filter((t) => !t.completed).length} items left</p>
-            </div>
+            </section>
 
-            <div>
+            <section>
               <label htmlFor="sort-todos"></label>
               <select
                 name="sort"
@@ -177,17 +181,11 @@ function App() {
                 <option value="completed">Completed</option>
                 <option value="active">Active</option>
               </select>
-            </div>
+            </section>
 
-            <div>
-              <button
-                type="button"
-                onClick={clearCompletedTodos}
-                formNoValidate
-              >
-                Clear completed
-              </button>
-            </div>
+            <button type="button" onClick={clearCompletedTodos} formNoValidate>
+              Clear completed
+            </button>
           </footer>
         </fieldset>
       </form>
