@@ -8,6 +8,9 @@ import {
 } from "react";
 import "./App.css";
 import { TodoForm } from "./components/TodoForm/TodoForm";
+import { TodoInput } from "./components/TodoForm/TodoInput";
+import { TodoButton } from "./components/TodoForm/TodoButton";
+import { TodoAction } from "./components/TodoForm/TodoAction";
 
 interface ITodo {
   date: string;
@@ -123,24 +126,21 @@ function App() {
       <TodoForm
         header={<h1>todos</h1>}
         action={
-          <>
-            <input
-              type="text"
-              name="todo"
+          <TodoAction>
+            <TodoInput
+              name="todoInput"
               onInput={saveInputValue}
               value={value}
-              minLength={1}
-              required
             />
-            <button
-              type="submit"
-              onClick={handleTodos}
+            <TodoButton
               aria-label="add todo"
               disabled={!value.length}
+              onClick={handleTodos}
+              type="submit"
             >
               <span>+</span>
-            </button>
-          </>
+            </TodoButton>
+          </TodoAction>
         }
         result={
           <>
@@ -155,14 +155,14 @@ function App() {
                     onChange={toggleTodoCompleted}
                   />
                   <label htmlFor={t.date}>{t.text}</label>
-                  <button
+                  <TodoButton
                     type="submit"
                     onClick={removeTodo}
                     formNoValidate
                     aria-label="remove todo"
                   >
                     <span>-</span>
-                  </button>
+                  </TodoButton>
                 </li>
               ))}
             </ul>
@@ -188,14 +188,15 @@ function App() {
               </select>
             </section>
 
-            <button
+            <TodoButton
               type="button"
               onClick={clearCompletedTodos}
               formNoValidate
               disabled={!todos.filter((t) => t.completed).length}
+              aria-label="clear completed todos"
             >
               Clear completed
-            </button>
+            </TodoButton>
           </>
         }
       />
