@@ -11,6 +11,7 @@ import { TodoForm } from "./components/TodoForm/TodoForm";
 import { TodoInput } from "./components/TodoForm/TodoInput";
 import { TodoButton } from "./components/TodoForm/TodoButton";
 import { TodoAction } from "./components/TodoForm/TodoAction";
+import { TodoTask } from "./components/TodoForm/TodoTask";
 
 interface ITodo {
   date: string;
@@ -143,30 +144,21 @@ function App() {
           </TodoAction>
         }
         result={
-          <>
-            <ul>
-              {sortedTodos().map((t) => (
-                <li key={t.date} data-id={t.date}>
-                  <input
-                    type="checkbox"
-                    name="todo"
-                    id={t.date}
-                    defaultChecked={t.completed}
-                    onChange={toggleTodoCompleted}
-                  />
-                  <label htmlFor={t.date}>{t.text}</label>
-                  <TodoButton
-                    type="submit"
-                    onClick={removeTodo}
-                    formNoValidate
-                    aria-label="remove todo"
-                  >
-                    <span>-</span>
-                  </TodoButton>
-                </li>
-              ))}
-            </ul>
-          </>
+          <ul>
+            {sortedTodos().map((t) => (
+              <li key={t.date} data-id={t.date}>
+                <TodoTask todo={t} onChange={toggleTodoCompleted} />
+                <TodoButton
+                  type="submit"
+                  onClick={removeTodo}
+                  formNoValidate
+                  aria-label="remove todo"
+                >
+                  <span>-</span>
+                </TodoButton>
+              </li>
+            ))}
+          </ul>
         }
         footer={
           <>
