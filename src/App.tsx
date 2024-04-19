@@ -6,6 +6,7 @@ import {
   TodoButton,
   TodoForm,
   TodoInput,
+  TodoSort,
   TodoTask,
 } from "./components";
 import { TodoSortOption } from "./components/TodoForm/TodoSortOption";
@@ -76,17 +77,16 @@ function App() {
             </section>
 
             <section>
-              <label htmlFor="sort-todos"></label>
-              <select
+              <TodoSort
                 name="sort"
                 id="sort-todos"
                 onChange={(e) => handleSort(e.target.value as TSortOptions)}
                 value={sortOption}
               >
                 {SortOptions.map((v) => (
-                  <TodoSortOption value={v} />
+                  <TodoSortOption value={v} key={v} />
                 ))}
-              </select>
+              </TodoSort>
             </section>
 
             <TodoButton

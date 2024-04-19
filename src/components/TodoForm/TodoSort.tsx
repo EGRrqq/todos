@@ -1,19 +1,22 @@
-export function TodoSort() {
+import { ChangeEventHandler, ReactNode, SelectHTMLAttributes } from "react";
+import { TSortOptions } from "../../types";
+
+interface ITodoSort extends SelectHTMLAttributes<HTMLSelectElement> {
+  children: ReactNode;
+
+  id: string;
+  name: string;
+  onChange: ChangeEventHandler<HTMLSelectElement>;
+  value: TSortOptions;
+}
+
+export function TodoSort({ id, children, ...props }: ITodoSort) {
   return (
     <>
-      <section>
-        <label htmlFor="sort-todos"></label>
-        <select
-          name="sort"
-          id="sort-todos"
-          onChange={(e) => handleSort(e.target.value as TSortOptions)}
-          value={sortOption}
-        >
-          <option value="all">All</option>
-          <option value="completed">Completed</option>
-          <option value="active">Active</option>
-        </select>
-      </section>
+      <label htmlFor={id}></label>
+      <select id={id} {...props}>
+        {children}
+      </select>
     </>
   );
 }
