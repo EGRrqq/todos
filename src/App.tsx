@@ -8,6 +8,7 @@ import {
   TodoInput,
   TodoTask,
 } from "./components";
+import { TodoSortOption } from "./components/TodoForm/TodoSortOption";
 
 function App() {
   const { cachedTodos, updateCache } = useCache();
@@ -27,6 +28,8 @@ function App() {
     setSortOption(option);
     sortedTodos(todos);
   }
+
+  const SortOptions: TSortOptions[] = ["active", "all", "completed"];
 
   return (
     <>
@@ -80,9 +83,9 @@ function App() {
                 onChange={(e) => handleSort(e.target.value as TSortOptions)}
                 value={sortOption}
               >
-                <option value="all">All</option>
-                <option value="completed">Completed</option>
-                <option value="active">Active</option>
+                {SortOptions.map((v) => (
+                  <TodoSortOption value={v} />
+                ))}
               </select>
             </section>
 
