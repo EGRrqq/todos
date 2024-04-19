@@ -1,14 +1,9 @@
 import { ChangeEventHandler } from "react";
+import { ITodo } from "../../types";
 
 interface ITodoTask {
   onChange: ChangeEventHandler<HTMLInputElement>;
   todo: ITodo;
-}
-
-interface ITodo {
-  date: string;
-  text: string;
-  completed: boolean;
 }
 
 export function TodoTask({ todo, ...props }: ITodoTask) {

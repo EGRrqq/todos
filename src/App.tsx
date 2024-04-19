@@ -1,125 +1,31 @@
-import {
-  ChangeEvent,
-  FormEvent,
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
 import "./App.css";
-import { TodoForm } from "./components/TodoForm/TodoForm";
-import { TodoInput } from "./components/TodoForm/TodoInput";
-import { TodoButton } from "./components/TodoForm/TodoButton";
-import { TodoAction } from "./components/TodoForm/TodoAction";
-import { TodoTask } from "./components/TodoForm/TodoTask";
-
-interface ITodo {
-  date: string;
-  text: string;
-  completed: boolean;
-}
-
-type TSortOptions = "all" | "completed" | "active";
-
-class Todo implements ITodo {
-  text: string;
-  date = Date.now().toString();
-  completed = false;
-
-  constructor(value: string) {
-    this.text = value;
-  }
-}
+import { TSortOptions } from "./types";
+import { useCache, useSort, useTodos, useValue } from "./hooks";
+import {
+  TodoAction,
+  TodoButton,
+  TodoForm,
+  TodoInput,
+  TodoTask,
+} from "./components";
 
 function App() {
-  const cacheValueId = "sweet-todos";
+  const { cachedTodos, updateCache } = useCache();
+  const { todos, addTodo, clearCompleted, removeSingle, toggleCompleted } =
+    useTodos({ cachedTodos });
+  const { value, saveValue, resetValue } = useValue();
+  const { sortOption, setSortOption, sortedTodos } = useSort();
 
-  const [value, setValue] = useState<string>("");
-  const [todos, setTodos] = useState<ITodo[]>(initTodos);
-  const [sortOption, setSortOption] = useState<TSortOptions>("all");
+  updateCache(todos);
 
-  // cache stuff
-  function getCacheValue() {
-    return localStorage.getItem(cacheValueId);
-  }
-  const setCacheValue = useCallback(
-    () => localStorage.setItem(cacheValueId, JSON.stringify(todos)),
-    [todos]
-  );
-
-  useEffect(() => {
-    setCacheValue();
-  }, [setCacheValue]);
-
-  // input value stuff
-  const saveInputValue = (e: FormEvent<HTMLInputElement>) =>
-    setValue((e.target as HTMLInputElement).value);
-
-  const resetInputValue = () => setValue("");
-
-  // todos stuff
-  function addTodos(e: FormEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    setTodos([...todos, new Todo(value)]);
-  }
-  function handleTodos(e: FormEvent<HTMLButtonElement>) {
-    addTodos(e);
-    resetInputValue();
-  }
-  function initTodos(): Todo[] | [] {
-    const cachedTodos = getCacheValue();
-
-    return cachedTodos ? JSON.parse(cachedTodos) : [];
-  }
-  function toggleTodoCompleted(e: ChangeEvent<HTMLInputElement>) {
-    const updatedTodos = todos.map((t) =>
-      t.date === (e.target as HTMLInputElement).id
-        ? { ...t, completed: !t.completed }
-        : t
-    );
-
-    setTodos(updatedTodos);
+  function handleTodos(value: string) {
+    addTodo(value);
+    resetValue();
   }
 
-  // sort todos
-  function updateSortOption(e: ChangeEvent<HTMLSelectElement>) {
-    setSortOption(e.target.value as TSortOptions);
-  }
-  function sortedTodos(): Todo[] {
-    let sortedTodos: Todo[];
-    switch (sortOption) {
-      case "active": {
-        sortedTodos = todos.filter((t) => !t.completed);
-        break;
-      }
-      case "completed": {
-        sortedTodos = todos.filter((t) => t.completed);
-        break;
-      }
-      default:
-        sortedTodos = todos;
-        break;
-    }
-
-    return sortedTodos;
-  }
-  function handleSort(e: ChangeEvent<HTMLSelectElement>) {
-    updateSortOption(e);
-    sortedTodos();
-  }
-  function clearCompletedTodos(e: MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-
-    const clearedTodos = todos.filter((t) => !t.completed);
-    setTodos(clearedTodos);
-  }
-
-  function removeTodo(e: MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-
-    const todoId = (e.target as HTMLButtonElement).parentElement?.dataset.id;
-    const newTodos = todos.filter((t) => t.date !== todoId);
-    setTodos(newTodos);
+  function handleSort(option: TSortOptions) {
+    setSortOption(option);
+    sortedTodos(todos);
   }
 
   return (
@@ -130,13 +36,13 @@ function App() {
           <TodoAction>
             <TodoInput
               name="todoInput"
-              onInput={saveInputValue}
+              onInput={(e) => saveValue((e.target as HTMLInputElement).value)}
               value={value}
             />
             <TodoButton
               aria-label="add todo"
               disabled={!value.length}
-              onClick={handleTodos}
+              onClick={() => handleTodos(value)}
               type="submit"
             >
               <span>+</span>
@@ -145,12 +51,12 @@ function App() {
         }
         result={
           <ul>
-            {sortedTodos().map((t) => (
+            {sortedTodos(todos).map((t) => (
               <li key={t.date} data-id={t.date}>
-                <TodoTask todo={t} onChange={toggleTodoCompleted} />
+                <TodoTask todo={t} onChange={() => toggleCompleted(t.date)} />
                 <TodoButton
                   type="submit"
-                  onClick={removeTodo}
+                  onClick={() => removeSingle(t.date)}
                   formNoValidate
                   aria-label="remove todo"
                 >
@@ -171,7 +77,7 @@ function App() {
               <select
                 name="sort"
                 id="sort-todos"
-                onChange={handleSort}
+                onChange={(e) => handleSort(e.target.value as TSortOptions)}
                 value={sortOption}
               >
                 <option value="all">All</option>
@@ -182,7 +88,7 @@ function App() {
 
             <TodoButton
               type="button"
-              onClick={clearCompletedTodos}
+              onClick={clearCompleted}
               formNoValidate
               disabled={!todos.filter((t) => t.completed).length}
               aria-label="clear completed todos"
