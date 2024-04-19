@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import { ITodo } from "../types";
 
-interface ICache {
-  todos: ITodo[];
-  observers: Array<() => void>;
+type Observer<T> = (data: T) => void;
+
+interface ICache<T> {
+  todos: T;
+  observers: Observer<T>[];
 }
 
-const cache: ICache = {
+const cache: ICache<ITodo[]> = {
   todos: [],
   observers: [],
 };
