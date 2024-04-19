@@ -5,7 +5,7 @@ interface ITodoSortOption extends OptionHTMLAttributes<HTMLOptionElement> {
   value: TSortOptions;
 }
 
-export function TodoSortOption({ value, ...props }: ITodoSortOption) {
+export function TodoOption({ value, ...props }: ITodoSortOption) {
   const valueLC = value.toLowerCase();
   const capitalizeLC = valueLC[0].toUpperCase() + valueLC.slice(1);
 

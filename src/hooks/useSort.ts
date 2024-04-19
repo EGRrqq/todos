@@ -6,22 +6,16 @@ export function useSort() {
   const [sortOption, setSortOption] = useState<TSortOptions>("all");
 
   function sortedTodos(todos: ITodo[]): Todo[] {
-    let sortedTodos: Todo[];
     switch (sortOption) {
       case "active": {
-        sortedTodos = todos.filter((t) => !t.completed);
-        break;
+        return todos.filter((t) => !t.completed);
       }
       case "completed": {
-        sortedTodos = todos.filter((t) => t.completed);
-        break;
+        return todos.filter((t) => t.completed);
       }
       default:
-        sortedTodos = todos;
-        break;
+        return todos;
     }
-
-    return sortedTodos;
   }
 
   return { sortOption, setSortOption, sortedTodos };
