@@ -2,7 +2,6 @@ import "./App.css";
 import { TSortOptions } from "./types";
 import { useCache, useSort, useTodos, useValue } from "./hooks";
 import {
-  TodoAction,
   TodoButton,
   TodoForm,
   TodoInput,
@@ -37,7 +36,7 @@ function App() {
       <TodoForm
         header={<h1>todos</h1>}
         action={
-          <TodoAction>
+          <>
             <TodoInput
               name="todoInput"
               onInput={(e) => saveValue((e.target as HTMLInputElement).value)}
@@ -51,7 +50,7 @@ function App() {
             >
               <span>+</span>
             </TodoButton>
-          </TodoAction>
+          </>
         }
         result={
           <ul>
